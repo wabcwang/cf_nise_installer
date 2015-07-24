@@ -2,27 +2,43 @@
 deployment: cf
 
 jobs:
-  - name: micro
+  - name: db
     templates:
       - postgres
-  - name: micro_ng
+  - name: metron_agent
+    templates:
+      - metron_agent      
+  - name: nats
     templates:
       - nats
       - nats_stream_forwarder
-      - etcd
-      - hm9000
+  - name: gorouter
+    templates:
+      - gorouter
+  - name: cc
+    templates:
       - cloud_controller_ng
       - cloud_controller_worker
       - cloud_controller_clock
+  - name: uaa
+    templates:
       - uaa
-      - haproxy
-      - gorouter
-      - dea_next
-      - loggregator_trafficcontroller
-      - doppler
-      - metron_agent
-      - dea_logging_agent
+  - name: hm9000
+    templates:
+      - etcd
+      - hm9000
       - etcd_metrics_server
+  - name: log
+    templates:
+      - loggregator_trafficcontroller
+      - syslog_drain_binder
+  - name: dea
+    templates:
+      - dea_next
+      - dea_logging_agent
+  - name: haproxy
+    templates:
+      - haproxy
 
 properties:
   networks:
@@ -38,6 +54,17 @@ properties:
 
   disk_quota_enabled: true
 
+  syslog_drain_binder:
+    debug: false
+    drain_url_ttl_seconds: 60 
+    polling_batch_size: 10 
+    update_interval_seconds: 15 
+
+  syslog_daemon_config:
+    address: 10.172.241.239
+    port: 5000
+    transport: udp
+  
   nats:
     user: nats
     password: c1oudc0w
@@ -72,6 +99,14 @@ properties:
         package: buildpack_ruby
       - name: nodejs_buildpack
         package: buildpack_nodejs
+      - name: php_buildpack
+        package: buildpack_php
+      - name: java_buildpack_offline
+        package: buildpack_java_offline
+      - name: python_buildpack
+        package: buildpack_python
+      - name: staticfile_buildpack
+        package: buildpack_staticfile
     security_group_definitions:
       - name: public_networks
         rules:
@@ -161,7 +196,7 @@ properties:
 
   uaa:
     login:
-      addnew: false
+      addnew: true
       client_secret: c1oudc0w
     url: https://uaa.192.168.10.10.xip.io
     catalina_opts: -Xmx384m -XX:MaxPermSize=128m
@@ -229,7 +264,7 @@ properties:
       z2: []
 
   login:
-    enabled: false
+    enabled: true
 
   loggregator:
     incoming_port: 13456

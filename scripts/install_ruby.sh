@@ -12,6 +12,9 @@ if ! (rbenv versions | grep -q 1.9.3-p484); then
     rbenv install 1.9.3-p484
 fi
 rbenv local 1.9.3-p484
+gem sources -r http://rubygems.org/
+gem sources -r https://ruby.taobao.org
+gem sources -a https://ruby.taobao.org
 
 gem install bundler --no-rdoc --no-ri
 rbenv rehash

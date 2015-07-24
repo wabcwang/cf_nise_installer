@@ -1,12 +1,13 @@
 #!/bin/bash -ex
 
-CF_RELEASE_USE_HEAD=${CF_RELEASE_USE_HEAD:-no}
+#是否使用最新的版本，设置为最新的
+CF_RELEASE_USE_HEAD=${CF_RELEASE_USE_HEAD:-yes}
 
 ruby_version=`rbenv version | cut -f1 -d" "` # to overwrite .ruby-version
 
 if [ ! "$(ls -A cf-release)" ]; then
     if [ -z "${CF_RELEASE_URL}" ]; then
-        git submodule update --init cf-release
+        git submodule update --init cf-release		
     else
         rmdir cf-release
         git clone ${CF_RELEASE_URL} cf-release
@@ -14,7 +15,8 @@ if [ ! "$(ls -A cf-release)" ]; then
 
     (
         cd cf-release
-
+        bundle config mirror.https://rubygems.org https://ruby.taobao.org
+		bundle config mirror.http://rubygems.org http://ruby.taobao.org
         if [ -n "${CF_RELEASE_BRANCH}" ]; then
             git checkout -f ${CF_RELEASE_BRANCH}
         fi
