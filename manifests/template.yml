@@ -149,7 +149,7 @@ properties:
 
   ccdb: &ccdb
     db_scheme: postgres
-    address: 192.168.10.10
+    address: DB_ADDRESS
     port: 5524
     roles:
       - tag: admin
@@ -163,7 +163,7 @@ properties:
 
   uaadb:
     db_scheme: postgresql
-    address: 192.168.10.10
+    address: DB_ADDRESS
     port: 5524
     roles:
       - tag: admin
@@ -176,7 +176,7 @@ properties:
 
   databases:
     db_scheme: postgres
-    address: 192.168.10.10
+    address: DB_ADDRESS
     port: 5524
     roles:
       - tag: admin

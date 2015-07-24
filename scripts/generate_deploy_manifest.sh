@@ -5,6 +5,11 @@ NISE_IP_ADDRESS=${NISE_IP_ADDRESS:-`ip addr | grep 'inet .*global' | cut -f 6 -d
 
 sed "s/192.168.10.10/${NISE_IP_ADDRESS}/g" manifests/template.yml > manifests/deploy.yml
 
+DB_IP=$(grep  "^ *DB_IP" cf.conf |awk -F "=" '$1{print $2}')
+if [ "${DB_IP}" != "" ]; then
+    sed "s/DB_ADDRESS/${DB_IP}/g" manifests/template.yml > manifests/deploy.yml
+fi
+NISE_DOMAIN=$(grep  "^ *DOMAIN" cf.conf |awk -F "=" '$1{print $2}')
 if [ "${NISE_DOMAIN}" != "" ]; then
     if (! sed --version 1>/dev/null 2>&1); then
         # not a GNU sed
@@ -14,6 +19,7 @@ if [ "${NISE_DOMAIN}" != "" ]; then
     fi
 fi
 
+NISE_DOMAIN=$(grep  "^ *PASSWD" cf.conf |awk -F "=" '$1{print $2}')
 if [ "${NISE_PASSWORD}" != "" ]; then
     if (! sed --version 1>/dev/null 2>&1); then
         # not a GNU sed
