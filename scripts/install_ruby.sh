@@ -7,8 +7,8 @@ if [ ! -d ~/.rbenv ]; then
     echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile
     echo 'eval "$(rbenv init -)"' >> ~/.profile
 	#change sources to ruby.taobao.org
-	sed -i 's!ftp.ruby-lang.org/pub/ruby!ruby.taobao.org/mirrors/ruby!'  $(rbenv root)/plugins/ruby-build/share/ruby-build/*
 fi
+sed -i 's!ftp.ruby-lang.org/pub/ruby!ruby.taobao.org/mirrors/ruby!'  $(rbenv root)/plugins/ruby-build/share/ruby-build/*
 source ~/.profile
 if ! (rbenv versions | grep -q 2.1.4 ); then
     rbenv install 2.1.4
