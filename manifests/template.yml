@@ -61,7 +61,7 @@ properties:
     update_interval_seconds: 15 
 
   syslog_daemon_config:
-    address: 10.172.241.239
+    address: SYS_LOG_IP
     port: 5000
     transport: udp
   
