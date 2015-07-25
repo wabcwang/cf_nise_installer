@@ -7,8 +7,6 @@ NISE_IP_ADDRESS=${NISE_IP_ADDRESS:-`ip addr | grep 'inet .*global' | cut -f 6 -d
 
 (
     cd nise_bosh
-	bundle config mirror.https://rubygems.org https://ruby.taobao.org
-	bundle config mirror.http://rubygems.org http://ruby.taobao.org
     bundle install
 
 	JOB=$(grep  "^ *JOB" cf.conf |awk -F "=" '$1{print $2}')

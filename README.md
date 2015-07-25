@@ -4,7 +4,7 @@
 
 CF Nise Installer is a set of scripts that installs a Cloud Foundry v2 instance to your single machine or Vagrant VM. You can build your own 'devbox' quickly with a single command with this installer.
 
-CF Nise Installer is based on [cf-release](https://github.com/cloudfoundry/cf-release) by Pivotal, [Nise BOSH](http://github.com/nttlabs/nise_bosh/) by NTT Laboratory.
+CF Nise Installer is based on [cf-release](https://github.com/cloudfoundry/cf-release) by Pivotal, [Nise BOSH](https://github.com/wabcwang/nise_bosh) by wabcwang base on NTT Laboratory.
 
 ### *NOTICE*
 
@@ -34,7 +34,7 @@ Run the commands below on your server:
 
 ```sh
 sudo apt-get install curl
-bash < <(curl -s -k -B https://raw.githubusercontent.com/yudai/cf_nise_installer/${INSTALLER_BRANCH:-master}/scripts/bootstrap.sh)
+bash < <(curl -s -k -B https://github.com/wabcwang/cf_nise_installer/${INSTALLER_BRANCH:-master}/scripts/bootstrap.sh)
 ```
 
 The `bootstrap.sh` script installs everything necessary to your devbox. This command may take a couple of hours at first run.
@@ -103,17 +103,17 @@ These scripts do *not* automatically update existing files in the working direct
 
 You can customize your installation using environment variables. Note that variables taks effect only when script is not skipped. For example, the variable `CF_RELEASE_URL` is used only when the `cf-release` directory is empty.
 
-| Name              | Description                              | Used in                                 | Default                                        |
-| :---------------: | :--------------------------------------: | :-------------------------------------: | :--------------------------------------------: |
-| INSTALLER_URL     | URI for cf_nise_installer                | bootstrap.sh                            | https://github.com/yudai/cf_nise_installer.git |
-| INSTALLER_BRANCH  | Branch/Revision for cf_nise_installer    | bootstrap.sh                            | master                                         |
+| Name              | Description                              | Used in                                 | Default                                           |
+| :---------------: | :--------------------------------------: | :-------------------------------------: | :-----------------------------------------------: |
+| INSTALLER_URL     | URI for cf_nise_installer                | bootstrap.sh                            | https://github.com/wabcwang/cf_nise_installer.git |
+| INSTALLER_BRANCH  | Branch/Revision for cf_nise_installer    | bootstrap.sh                            | master                                            |
 | CF_RELEASE_URL    | URI for cf-release                       | clone_cf_release.sh                     | *nil* (https://github.com/cloudfoundry/cf-release.git is set to submodule)|
 | CF_RELEASE_BRANCH | Branch/Revision for cf-release           | clone_cf_release.sh                     | *nil* (certain stable revision is set to submodule) |
-| CF_RELEASE_USE_HEAD | Create a dev release with the head of the branch | clone_cf_release.sh           | no (set `yes` to enable)                       |
-| NISE_BOSH_REV     | Git revision specifier [note] of nise_bosh repo | clone_nise_bosh.sh               | *nil* (currently checked-out revision)         |
-| NISE_IP_ADDRESS   | IP address to bind CF components         | install_cf_release.sh                   | Automatically detected using `ip` command      |
-| NISE_DOMAIN       | Domain name for the devbox               | install_cf_release.sh                   | *nil* (<ip_address>.xip.io)                    |
-| NISE_PASSWORD     | Password for CF components               | install_cf_release.sh                   | c1oudc0w                                       |
+| CF_RELEASE_USE_HEAD | Create a dev release with the head of the branch | clone_cf_release.sh           | no (set `yes` to enable)                           |
+| NISE_BOSH_REV     | Git revision specifier [note] of nise_bosh repo | clone_nise_bosh.sh               | *nil* (currently checked-out revision)             |
+| NISE_IP_ADDRESS   | IP address to bind CF components         | install_cf_release.sh                   | Automatically detected using `ip` command          |
+| NISE_DOMAIN       | Domain name for the devbox               | install_cf_release.sh                   | *nil* (<ip_address>.xip.io)                        |
+| NISE_PASSWORD     | Password for CF components               | install_cf_release.sh                   | c1oudc0w                                           |
 
 [note]: Do *not* use any relative revision specifier from HEAD (e.g. `HEAD~`, `HEAD~10`, `HEAD^^`). Please use an absolute revision specifier (e.g. `123abc`, `develop`). You may use a relative revision specifier from an absolute revision specifier (e.g. `master~~`).
 
@@ -124,7 +124,7 @@ You can create a devbox VM quickly with a VM using Vagrant.
 #### Requirements
 
 * Vagrant 1.4 or later
-* Ruby 1.9.3-p484
+* Ruby 2.1.4
 * 8GB+ free HDD space
 * 2GB+ free memory
 
