@@ -9,7 +9,7 @@ NISE_IP_ADDRESS=${NISE_IP_ADDRESS:-`ip addr | grep 'inet .*global' | cut -f 6 -d
     cd nise_bosh
     bundle install
 
-	JOB=$(grep  "^ *JOB" ./scripts/cf.conf |awk -F "=" '$1{print $2}')
+	JOB=$(grep  "^ *JOB" ../scripts/cf.conf |awk -F "=" '$1{print $2}')
 	for NAME in ${JOB[@]}
 	do
 	    if [ "db"="$NAME" ]; then
