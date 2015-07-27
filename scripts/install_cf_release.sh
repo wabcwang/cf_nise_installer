@@ -12,7 +12,7 @@ NISE_IP_ADDRESS=${NISE_IP_ADDRESS:-`ip addr | grep 'inet .*global' | cut -f 6 -d
 	JOB=$(grep  "^ *JOB" ../scripts/cf.conf |awk -F "=" '$1{print $2}')
 	for NAME in ${JOB[@]}
 	do
-	    if [ "db"="$NAME" ]; then
+	    if [ "db" = "$NAME" ]; then
 		    # Old spec format
 			# 编译数据库
             sudo env PATH=$PATH bundle exec ./bin/nise-bosh -y ../cf-release ../manifests/deploy.yml db -n ${NISE_IP_ADDRESS}
