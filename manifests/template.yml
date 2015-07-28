@@ -7,7 +7,7 @@ jobs:
       - postgres
   - name: metron_agent
     templates:
-      - metron_agent      
+      - metron_agent
   - name: nats
     templates:
       - nats
@@ -39,6 +39,9 @@ jobs:
   - name: haproxy
     templates:
       - haproxy
+  - name: consul_agent
+    templates:
+      - consul_agent
 
 properties:
   networks:
@@ -48,7 +51,7 @@ properties:
   ssl:
     skip_cert_verify: true
   system_domain: 192.168.10.10.xip.io
-  system_domain_organization: DevBox
+  system_domain_organization: paas
   app_domains:
     - 192.168.10.10.xip.io
 
@@ -71,7 +74,8 @@ properties:
     address: 192.168.10.10
     port: 4222
     machines:
-      - 192.168.10.10
+      - 10.171.119.40
+      - 10.171.89.98
 
   dea_next:
     heartbeat_interval_in_seconds: 60
@@ -149,7 +153,7 @@ properties:
 
   ccdb: &ccdb
     db_scheme: postgres
-    address: DB_ADDRESS
+    address: 10.173.30.20
     port: 5524
     roles:
       - tag: admin
@@ -163,7 +167,7 @@ properties:
 
   uaadb:
     db_scheme: postgresql
-    address: DB_ADDRESS
+    address: 10.173.30.20
     port: 5524
     roles:
       - tag: admin
@@ -176,7 +180,7 @@ properties:
 
   databases:
     db_scheme: postgres
-    address: DB_ADDRESS
+    address: 10.173.30.20
     port: 5524
     roles:
       - tag: admin
@@ -232,6 +236,17 @@ properties:
       username: batch-username
       password: c1oudc0w
     clients:
+      gorouter:
+        authorities: clients.read,clients.write,clients.admin,route.admin,route.advertise
+        authorized-grant-types: client_credentials,refresh_token
+        scope: openid,cloud_controller_service_permissions.read
+        secret: cloudc0w
+      login:
+        authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
+        authorized-grant-types: authorization_code,client_credentials,refresh_token
+        redirect-uri: https;//login.192.168.10.10.xip.io
+        scope: openid,oauth.approvals
+        secret: cloudcow
       cloud_controller_username_lookup:
         secret: c1oudc0w
       doppler:
@@ -243,14 +258,16 @@ properties:
 
   etcd:
     machines:
-      - 192.168.10.10
+      - 10.171.89.98
+      - 10.171.119.40
 
   etcd_metrics_server:
     nats:
       username: nats
       password: c1oudc0w
       machines:
-        - 192.168.10.10
+        - 10.171.119.40
+        - 10.171.89.98
 
   router:
     port: 8888
@@ -260,8 +277,9 @@ properties:
       password: c1oudc0w
     servers:
       z1:
-        - 192.168.10.10
-      z2: []
+        - 10.171.89.98
+      z2:
+        - 10.171.119.40
 
   login:
     enabled: true
@@ -280,6 +298,7 @@ properties:
       port: 6799
     incoming_port: 3456
     dropsonde_incoming_port: 3457
+    deployment: dtdream
 
   doppler:
     zone: default
@@ -292,7 +311,8 @@ properties:
     outgoing_port: 8081
     servers:
       default:
-        - 192.168.10.10
+        - 10.171.119.40
+        - 10.171.89.98
 
   traffic_controller:
     zone: default

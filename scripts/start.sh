@@ -6,12 +6,12 @@ cd "$path"/../
 sudo /var/vcap/bosh/bin/monit
 sleep 5
 
-if [ ""!="$( find /var/vcap/jobs -name postgres)" ]; then
+if [ "" != "$( find /var/vcap/jobs -name postgres)" ]; then
     sudo /var/vcap/bosh/bin/monit start postgres
 	sleep 20
 fi
 
-if [ ""!= "$( find /var/vcap/jobs -name nats)" ]; then
+if [ "" != "$( find /var/vcap/jobs -name nats)" ]; then
     sudo /var/vcap/bosh/bin/monit start nats
 	sleep 20
 fi
