@@ -32,6 +32,7 @@ jobs:
     templates:
       - loggregator_trafficcontroller
       - syslog_drain_binder
+	  - doppler
   - name: dea
     templates:
       - dea_next
