@@ -32,7 +32,7 @@ jobs:
     templates:
       - loggregator_trafficcontroller
       - syslog_drain_binder
-	  - doppler
+      - doppler
   - name: dea
     templates:
       - dea_next
@@ -79,13 +79,14 @@ properties:
       - 10.171.89.98
 
   dea_next:
+    logging_level: info
     heartbeat_interval_in_seconds: 60
 
   cc: &cc
     bulk_api_password: c1oudc0w
     srv_api_uri: https://api.192.168.10.10.xip.io
-    db_logging_level: debug2
-    ccng.logging_level: debug2
+    db_logging_level: info
+    ccng.logging_level: info
     db_encryption_key: c1oudc0w
     quota_definitions:
       default:
@@ -112,6 +113,8 @@ properties:
         package: buildpack_python
       - name: staticfile_buildpack
         package: buildpack_staticfile
+      - name: binary_buildpack
+        package: buildpack_binary
     security_group_definitions:
       - name: public_networks
         rules:
@@ -154,7 +157,7 @@ properties:
 
   ccdb: &ccdb
     db_scheme: postgres
-    address: 10.173.30.20
+    address: DB_IP
     port: 5524
     roles:
       - tag: admin
@@ -168,7 +171,7 @@ properties:
 
   uaadb:
     db_scheme: postgresql
-    address: 10.173.30.20
+    address: DB_IP
     port: 5524
     roles:
       - tag: admin
@@ -181,7 +184,7 @@ properties:
 
   databases:
     db_scheme: postgres
-    address: 10.173.30.20
+    address: DB_IP
     port: 5524
     roles:
       - tag: admin
@@ -247,7 +250,7 @@ properties:
         authorized-grant-types: authorization_code,client_credentials,refresh_token
         redirect-uri: https;//login.192.168.10.10.xip.io
         scope: openid,oauth.approvals
-        secret: cloudcow
+        secret: c1oudc0w
       cloud_controller_username_lookup:
         secret: c1oudc0w
       doppler:
@@ -279,7 +282,6 @@ properties:
     servers:
       z1:
         - 10.171.89.98
-      z2:
         - 10.171.119.40
 
   login:
