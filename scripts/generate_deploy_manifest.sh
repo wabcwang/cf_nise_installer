@@ -7,7 +7,7 @@ sed "s/192.168.10.10/${NISE_IP_ADDRESS}/g" manifests/template.yml > manifests/de
 
 DB_IP=$(grep  "^ *DB_IP" scripts/cf.conf |awk -F "=" '$1{print $2}')
 if [ "${DB_IP}" != "" ]; then
-    sed -i "s/DB_ADDRESS/${DB_IP}/g" manifests/deploy.yml
+    sed -i "s/DB_IP/${DB_IP}/g" manifests/deploy.yml
 fi
 
 LOG_IP=$(grep  "^ *SYS_LOG_IP" scripts/cf.conf |awk -F "=" '$1{print $2}')
