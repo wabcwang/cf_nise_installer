@@ -8,7 +8,7 @@ if [ ! -d ~/.rbenv ]; then
     echo 'eval "$(rbenv init -)"' >> ~/.profile
 	#change sources to ruby.taobao.org
 fi
-sed -i 's!ftp.ruby-lang.org/pub/ruby!ruby.taobao.org/mirrors/ruby!'  $(rbenv root)/plugins/ruby-build/share/ruby-build/*
+#sed -i 's!ftp.ruby-lang.org/pub/ruby!ruby.taobao.org/mirrors/ruby!'  $(rbenv root)/plugins/ruby-build/share/ruby-build/*
 source ~/.profile
 if ! (rbenv versions | grep -q 1.9.3-p484 ); then
     rbenv install 1.9.3-p484

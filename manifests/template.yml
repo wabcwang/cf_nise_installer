@@ -20,6 +20,8 @@ jobs:
       - cloud_controller_ng
       - cloud_controller_worker
       - cloud_controller_clock
+      - consul_agent
+      - nfs_mounter
   - name: uaa
     templates:
       - uaa
@@ -28,6 +30,7 @@ jobs:
       - etcd
       - hm9000
       - etcd_metrics_server
+      - nfs_mounter
   - name: log
     templates:
       - loggregator_trafficcontroller
@@ -40,19 +43,22 @@ jobs:
   - name: haproxy
     templates:
       - haproxy
-  - name: consul_agent
-    templates:
       - consul_agent
+  - name: nfs_server
+    template:
+      - debian_nfs_server
 
 properties:
   networks:
     apps: default
 
+  support_address: http://www.dtdream.com
+  description: xingyun platform by DTDream
   domain: 192.168.10.10.xip.io
   ssl:
     skip_cert_verify: true
   system_domain: 192.168.10.10.xip.io
-  system_domain_organization: paas
+  system_domain_organization: xingyun
   app_domains:
     - 192.168.10.10.xip.io
 
@@ -65,39 +71,55 @@ properties:
     update_interval_seconds: 15 
 
   syslog_daemon_config:
-    address: SYS_LOG_IP
+    address: 192.168.10.14
     port: 5000
     transport: udp
   
   nats:
     user: nats
-    password: c1oudc0w
+    password: 123456
     address: 192.168.10.10
     port: 4222
     machines:
-      - 10.171.119.40
-      - 10.171.89.98
+      - 192.168.10.4
+      - 192.168.10.5
+
+  nfs_server:
+    address: 192.168.10.13
+    no_root_squash: true  
+    allow_from_entries: 
+      - 192.168.10.0/24
+
+  debian_nfs_server:
+    persistent_disk: 460800
+    networks:
+      - name: default
+        static_ips:
+        - 192.168.10.13
 
   dea_next:
-    logging_level: info
     heartbeat_interval_in_seconds: 60
+    logging_level: info
+    memory_mb: 16000
+    disk_mb: 200000
 
   cc: &cc
-    bulk_api_password: c1oudc0w
+    bulk_api_password: 123456
     srv_api_uri: https://api.192.168.10.10.xip.io
     db_logging_level: info
+    logging_level: info
     ccng.logging_level: info
-    db_encryption_key: c1oudc0w
+    db_encryption_key: 123456
     quota_definitions:
       default:
-        memory_limit: 10240
+        memory_limit: 102400
         total_services: 100
         non_basic_services_allowed: true
         total_routes: 1000
         trial_db_allowed: true
     hm9000_noop: false
     staging_upload_user: uploaduser
-    staging_upload_password: c1oudc0w
+    staging_upload_password: 123456
     install_buildpacks:
       - name: java_buildpack
         package: buildpack_java
@@ -131,7 +153,7 @@ properties:
       - name: private_networks
         rules:
           - protocol: all
-            destination: 10.0.0.0-10.255.255.255
+            destination: 192.168.10.0-10.255.255.255
           - protocol: all
             destination: 172.16.0.0-172.31.255.255
           - protocol: all
@@ -152,17 +174,17 @@ properties:
       - public_networks
       - private_networks
       - dns
-    internal_api_password: c1oudc0w
+    internal_api_password: 123456
   ccng: *cc
 
   ccdb: &ccdb
     db_scheme: postgres
-    address: DB_IP
+    address: 192.168.10.12
     port: 5524
     roles:
       - tag: admin
         name: ccadmin
-        password: c1oudc0w
+        password: 123456
     databases:
       - tag: cc
         name: ccdb
@@ -171,12 +193,12 @@ properties:
 
   uaadb:
     db_scheme: postgresql
-    address: DB_IP
+    address: 192.168.10.12
     port: 5524
     roles:
       - tag: admin
         name: uaaadmin
-        password: c1oudc0w
+        password: 123456
     databases:
       - tag: uaa
         name: uaadb
@@ -184,15 +206,15 @@ properties:
 
   databases:
     db_scheme: postgres
-    address: DB_IP
+    address: 192.168.10.12
     port: 5524
     roles:
       - tag: admin
         name: ccadmin
-        password: c1oudc0w
+        password: 123456
       - tag: admin
         name: uaaadmin
-        password: c1oudc0w
+        password: 123456
     databases:
       - tag: cc
         name: ccdb
@@ -205,7 +227,7 @@ properties:
   uaa:
     login:
       addnew: true
-      client_secret: c1oudc0w
+      client_secret: 123456
     url: https://uaa.192.168.10.10.xip.io
     catalina_opts: -Xmx384m -XX:MaxPermSize=128m
     jwt:
@@ -233,59 +255,53 @@ properties:
         spULZVNRxq7veq/fzwIDAQAB
         -----END PUBLIC KEY-----
     cc:
-      client_secret: c1oudc0w
+      client_secret: 123456
     admin:
-      client_secret: c1oudc0w
+      client_secret: 123456
     batch:
       username: batch-username
-      password: c1oudc0w
+      password: 123456
     clients:
       gorouter:
         authorities: clients.read,clients.write,clients.admin,route.admin,route.advertise
         authorized-grant-types: client_credentials,refresh_token
         scope: openid,cloud_controller_service_permissions.read
         secret: cloudc0w
-      login:
-        authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
-        authorized-grant-types: authorization_code,client_credentials,refresh_token
-        redirect-uri: https;//login.192.168.10.10.xip.io
-        scope: openid,oauth.approvals
-        secret: c1oudc0w
       cloud_controller_username_lookup:
-        secret: c1oudc0w
+        secret: 123456
       doppler:
         authorities: uaa.resource
-        secret: c1oudc0w
+        secret: 123456
     scim:
       users:
-      - admin|c1oudc0w|scim.write,scim.read,openid,cloud_controller.admin,doppler.firehose
+      - admin|123456|scim.write,scim.read,openid,cloud_controller.admin,doppler.firehose
 
   etcd:
     machines:
-      - 10.171.89.98
-      - 10.171.119.40
+      - 192.168.10.10
+      - 192.168.10.11
 
   etcd_metrics_server:
     nats:
       username: nats
-      password: c1oudc0w
+      password: 123456
       machines:
-        - 10.171.119.40
-        - 10.171.89.98
+        - 192.168.10.4
+        - 192.168.10.5
 
   router:
     port: 8888
     status:
       port: 18888
       user: gorouter
-      password: c1oudc0w
+      password: 123456
     servers:
       z1:
-        - 10.171.89.98
-        - 10.171.119.40
+        - 192.168.10.4
+        - 192.168.10.5
 
   login:
-    enabled: true
+    enabled: false
 
   loggregator:
     incoming_port: 13456
@@ -297,7 +313,7 @@ properties:
     zone: default
     status:
       user: trafic_controller
-      password: c1oudc0w
+      password: 123456
       port: 6799
     incoming_port: 3456
     dropsonde_incoming_port: 3457
@@ -307,27 +323,27 @@ properties:
     zone: default
     status:
       user: loggregator
-      password: c1oudc0w
+      password: 123456
       port: 5768
     incoming_port: 13456
     dropsonde_incoming_port: 13457
     outgoing_port: 8081
     servers:
       default:
-        - 10.171.119.40
-        - 10.171.89.98
+        - 192.168.10.10
+        - 192.168.10.11
 
   traffic_controller:
     zone: default
     status:
       user: trafic_controller
-      password: c1oudc0w
+      password: 123456
       port: 6789
     incoming_port: 23456
     outgoing_port: 18080
 
   metron_endpoint:
-    shared_secret: c1oudc0w
+    shared_secret: 123456
     host: 127.0.0.1
     port: 3456
     dropsonde_port: 3457
@@ -336,10 +352,10 @@ properties:
    port: 4443
 
   loggregator_endpoint:
-    shared_secret: c1oudc0w
+    shared_secret: 123456
 
   doppler_endpoint:
-    shared_secret: c1oudc0w
+    shared_secret: 123456
 
   dropsonde:
     enabled: true

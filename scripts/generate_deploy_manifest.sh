@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 #获取内网的ip
-NISE_IP_ADDRESS=${NISE_IP_ADDRESS:-`ip addr | grep 'inet .*global' | cut -f 6 -d ' ' | cut -f1 -d '/' | grep 10.`}
+NISE_IP_ADDRESS=${NISE_IP_ADDRESS:-`ip addr | grep 'inet .*global eth0' | cut -f 6 -d ' ' | cut -f1 -d '/'`}
 
 sed "s/192.168.10.10/${NISE_IP_ADDRESS}/g" manifests/template.yml > manifests/deploy.yml
 
@@ -10,9 +10,9 @@ if [ "${DB_IP}" != "" ]; then
     sed -i "s/DB_IP/${DB_IP}/g" manifests/deploy.yml
 fi
 
-LOG_IP=$(grep  "^ *SYS_LOG_IP" scripts/cf.conf |awk -F "=" '$1{print $2}')
-if [ "${LOG_IP}" != "" ]; then
-    sed -i "s/SYS_LOG_IP/${LOG_IP}/g" manifests/deploy.yml
+ELK_IP=$(grep  "^ *ELK_IP" scripts/cf.conf |awk -F "=" '$1{print $2}')
+if [ "${ELK_IP}" != "" ]; then
+    sed -i "s/ELK_IP/${ELK_IP}/g" manifests/deploy.yml
 fi
 
 NISE_DOMAIN=$(grep  "^ *DOMAIN" scripts/cf.conf |awk -F "=" '$1{print $2}')

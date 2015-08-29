@@ -17,7 +17,7 @@ done
 
 if (sudo /var/vcap/bosh/bin/monit summary | tail -n +3 | grep -c -E "stop pending$" > /dev/null); then
   echo "Unable to stop processes"
-else
+else if [ "" != "$( find /var/vcap/jobs -name postgres)" ]; then
   echo "Now stopping postgres..."
   sudo /var/vcap/bosh/bin/monit stop postgres
   for ((i=0; i < 12; i++)); do
@@ -29,4 +29,5 @@ else
   if (sudo /var/vcap/bosh/bin/monit summary | tail -n +3 | grep -c -E "stop pending$" > /dev/null); then
     echo "Unable to stop postgres processes"
   fi
+fi
 fi
