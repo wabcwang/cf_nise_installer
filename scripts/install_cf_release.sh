@@ -24,6 +24,10 @@ NISE_IP_ADDRESS=${NISE_IP_ADDRESS:-`ip addr | grep 'inet .*global eth0' | cut -f
 	    	# Old spec format
 	    	# 编译数据库
             	sudo env PATH=$PATH bundle exec ./bin/nise-bosh -y ../cf-release ../manifests/deploy.yml db -n ${NISE_IP_ADDRESS}
+#           elif [ "etcd" = "$NAME" ]; then
+                # New spec format, keeping the  monit files installed in the previous run
+                # 按需编译各个组件
+#                sudo env PATH=$PATH bundle exec ./bin/nise-bosh --keep-monit-files -y  ../cf-release ../manifests/deploy.yml ${NAME} -n ${NISE_IP_ADDRESS}
 	   else
 		# New spec format, keeping the  monit files installed in the previous run
 	        # 按需编译各个组件
