@@ -13,8 +13,8 @@ NISE_IP_ADDRESS=${NISE_IP_ADDRESS:-`ip addr | grep 'inet .*global eth0' | cut -f
 		JOB=$(grep  "^ *JOB" ../scripts/cf.conf |awk -F "=" '$1{print $2}')
                 INDEX=$(grep  "^ *INDEX" ../scripts/cf.conf |awk -F "=" '$1{print $2}')
 	else
-        	JOB=$(sudo grep  ":${NISE_IP_ADDRESS}" /root/shell/cf.conf |awk -F ":" '$1{print $1}')
-                INDEX=$(sudo grep  ":${NISE_IP_ADDRESS}" /root/shell/cf.conf |awk -F ":" '$1{print $2}')
+        	JOB=$(sudo grep  ":${NISE_IP_ADDRESS}$" /root/shell/cf.conf |awk -F ":" '$1{print $1}')
+                INDEX=$(sudo grep  ":${NISE_IP_ADDRESS}$" /root/shell/cf.conf |awk -F ":" '$1{print $2}')
         fi
         
 	sudo env PATH=$PATH bundle exec ./bin/nise-bosh --keep-monit-files -y ../cf-release ../manifests/deploy.yml metron_agent -n ${NISE_IP_ADDRESS}
