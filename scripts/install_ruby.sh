@@ -20,5 +20,5 @@ gem sources -a https://ruby.taobao.org
 
 gem install bundler --no-rdoc --no-ri
 bundle config mirror.https://rubygems.org https://ruby.taobao.org
-bundle config mirror.http://rubygems.org http://ruby.taobao.org
+bundle config mirror.http://rubygems.org https://ruby.taobao.org
 rbenv rehash
